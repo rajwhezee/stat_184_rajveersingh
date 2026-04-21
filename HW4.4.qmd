@@ -1,0 +1,263 @@
+---
+title: "HW4 Data Analysis Report"
+author: "Rajveer Singh"
+date: "04/13/2026"
+format: pdf
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Busiest Airports Analysis
+
+This section examines six major airports and compares their passenger traffic from 2020 to 2024. The goal is to show which airports handled the most passengers and how traffic changed over time.
+
+## Table of Busiest Airports
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(gt)
+library(grid)
+
+airport_data <- tibble(
+  Airport = rep(c("ATL", "DXB", "LHR", "PKX", "FRA", "LAX"), each = 5),
+  Year = rep(2020:2024, times = 6),
+  Passengers = c(
+    42918685, 75704760, 93699630, 104653451, 108067766,
+    18229461, 29110609, 66069981, 86994365, 92331506,
+    22111469, 19393145, 61614508, 79183364, 83884572,
+    16091449, 25051012, 10277623, 39410776, 49441029,
+    18768601, 24812849, 48918482, 59355389, 61564957,
+    28779527, 48007284, 65924298, 75050875, 76588028
+  )
+) |>
+  mutate(passengers_mil = Passengers / 1000000)
+
+airport_data |>
+  select(Airport, Year, Passengers) |>
+  pivot_wider(names_from = Year, values_from = Passengers) |>
+  gt() |>
+  fmt_number(
+    columns = c(`2020`, `2021`, `2022`, `2023`, `2024`),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  tab_header(
+    title = "Annual Passenger Totals for Six Major Airports",
+    subtitle = "Passenger counts from 2020 to 2024"
+  )
+```
+
+
+## Main Plot
+
+```{r}
+#| echo: false
+psuPalette <- c("#1E407C", "#BC204B", "#3EA39E", "#E98300",
+                "#999999", "#AC8DCE")
+
+airport_data |>
+  ggplot(aes(
+    x = Year,
+    y = passengers_mil,
+    group = Airport,
+    color = Airport,
+    linetype = Airport
+  )) +
+  geom_point(size = 2) +
+  geom_line(linewidth = 1) +
+  theme_bw() +
+  scale_color_manual(values = psuPalette) +
+  labs(
+    x = "Year",
+    y = "Total Passengers (millions)",
+    title = "Annual Passenger Traffic for Six Major Airports, 2020–2024",
+    color = "Airport",
+    linetype = "Airport"
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.key.width = unit(1.5, "cm")
+  )
+```
+## Analysis
+The table and line graph show how passenger traffic changed across six major airports from 2020 to 2024. Atlanta remained the busiest airport throughout the period and showed strong growth after 2020. Dubai and London Heathrow also experienced major increases over time, reflecting recovery in air travel. Beijing Daxing shows more fluctuation, while Frankfurt and Los Angeles display steadier trends.
+## Monte Carlo Simulation
+Monte Carlo integration is a numerical method used to estimate the value of an integral using random sampling. Instead of calculating the exact area under a curve directly, the method generates random points and estimates the proportion that fall under the function.
+
+## Visualization
+```{r}
+#| echo: false
+library(tidyverse)
+library(ggplot2)
+
+mc_simulation <- function(n, x_min, x_max, y_min, y_max) {
+  tibble(
+    x = runif(n, x_min, x_max),
+    y = runif(n, y_min, y_max)
+  ) |>
+    mutate(
+      f_x = dchisq(x, df = 5),
+      under_curve = y <= f_x
+    )
+}
+
+samples <- c(100, 500, 1000)
+
+mc_data <- map_df(
+  samples,
+  ~ mc_simulation(.x, 0, 20, 0, 0.16) |> mutate(n = .x)
+)
+
+ggplot(mc_data, aes(x = x, y = y, color = under_curve)) +
+  geom_point(alpha = 0.5) +
+  stat_function(
+    fun = dchisq,
+    args = list(df = 5),
+    color = "black",
+    linewidth = 1
+  ) +
+  facet_wrap(~ n) +
+  labs(
+    title = "Monte Carlo Integration with Different Sample Sizes",
+    x = "x",
+    y = "y",
+    color = "Under Curve"
+  ) +
+  theme_minimal()
+
+```
+
+## Interpretation
+
+The visualization shows that as the number of sampled points increases, the Monte Carlo estimate becomes more stable and accurate. With fewer points, the estimate is less reliable and more variable. As the number of samples increases, the points better approximate the area under the curve, demonstrating how larger sample sizes improve accuracy.
+# Planning and Prompting GenAI Tools
+
+## My Plan
+
+For this task, I planned to analyze the busiest airports dataset and the Monte Carlo simulation from earlier assignments. For the airports dataset, I aimed to ensure the data was in a tidy format with variables such as airport, year, and passenger counts. I also planned to create a clear visualization, such as a line graph, to show how passenger traffic changed over time.
+
+For the Monte Carlo section, I planned to simulate random points and visualize how the estimate of the integral improves with larger sample sizes using a small multiple plot. My goal was to clearly demonstrate how increasing the number of samples affects the accuracy of the approximation.
+
+
+# Appendix A: GenAI Usage
+
+Tool: ChatGPT (GPT-5.3)  
+Date: April 13, 2026  
+
+## Prompt
+
+"Given a dataset of airport passenger counts over multiple years, help me ensure the data is in a tidy format and suggest an appropriate visualization to show trends over time. Also, for a Monte Carlo simulation, suggest how to create a small multiple plot to compare results across different sample sizes."
+
+## Response
+
+To organize your airport dataset, you should ensure it follows a tidy format where each row represents a single observation and each column represents a variable. In your case, the dataset should include columns such as Airport, Year, and Passengers.
+
+To visualize trends over time, a line graph is appropriate. You can use a line plot with Year on the x-axis and passenger counts on the y-axis, and group by Airport. This will allow you to clearly compare trends across different airports.
+
+For the Monte Carlo simulation, you can generate random points within a defined region and determine whether they fall under the curve of your function. To compare different sample sizes, you can run the simulation with multiple values of n (such as 100, 500, and 1000).
+
+To visualize this effectively, you can use a small multiple plot by applying faceting. In ggplot2, this can be done using facet_wrap(), which allows you to display separate panels for each sample size. This will clearly show how the approximation improves as the number of samples increases.
+
+## Generic Output
+
+The dataset was cleaned by removing missing values and converting variables into appropriate formats. Basic summaries were created to understand the data. A visualization was generated to display relationships between variables, but the approach was general and not specifically tailored to the dataset.
+
+---
+
+## Comparison
+
+The plan-based prompt produced a more relevant and detailed response compared to the generic output. Because the prompt included specific details about the airport dataset and the Monte Carlo simulation, the AI was able to suggest appropriate visualizations such as a line graph and a faceted plot for comparing sample sizes.
+
+In contrast, the generic output was vague and did not provide any specific guidance on how to structure the data or what type of visualization to use. This shows that including clear context and goals in prompts leads to more useful and assignment-specific outputs from GenAI tools.
+
+# Appendix B: Code Appendix
+
+```{r}
+#| echo: true
+
+# =========================
+# LIBRARIES
+# =========================
+library(tidyverse)
+library(ggplot2)
+library(gt)
+
+# =========================
+# BUSIEST AIRPORTS DATA
+# =========================
+# Create dataset of six major airports
+airport_data <- tibble(
+  Airport = rep(c("ATL", "DXB", "LHR", "PKX", "FRA", "LAX"), each = 5),
+  Year = rep(2020:2024, times = 6),
+  Passengers = c(
+    42918685, 75704760, 93699630, 104653451, 108067766,
+    18229461, 29110609, 66069981, 86994365, 92331506,
+    22111469, 19393145, 61614508, 79183364, 83884572,
+    16091449, 25051012, 10277623, 39410776, 49441029,
+    18768601, 24812849, 48918482, 59355389, 61564957,
+    28779527, 48007284, 65924298, 75050875, 76588028
+  )
+) |>
+  mutate(passengers_mil = Passengers / 1000000)
+
+# =========================
+# TABLE CREATION
+# =========================
+# Convert to wide format and display as table
+airport_data |>
+  select(Airport, Year, Passengers) |>
+  pivot_wider(names_from = Year, values_from = Passengers) |>
+  gt()
+
+# =========================
+# AIRPORTS VISUALIZATION
+# =========================
+# Create line plot of passenger trends
+psuPalette <- c("#1E407C", "#BC204B", "#3EA39E", "#E98300",
+                "#999999", "#AC8DCE")
+
+airport_data |>
+  ggplot(aes(
+    x = Year,
+    y = passengers_mil,
+    group = Airport,
+    color = Airport,
+    linetype = Airport
+  )) +
+  geom_point() +
+  geom_line() +
+  theme_bw()
+
+# =========================
+# MONTE CARLO SIMULATION
+# =========================
+# Function to simulate random points
+mc_simulation <- function(n, x_min, x_max, y_min, y_max) {
+  tibble(
+    x = runif(n, x_min, x_max),
+    y = runif(n, y_min, y_max)
+  ) |>
+    mutate(
+      f_x = dchisq(x, df = 5),
+      under_curve = y <= f_x
+    )
+}
+
+# Generate data for multiple sample sizes
+samples <- c(100, 500, 1000)
+
+mc_data <- map_df(
+  samples,
+  ~ mc_simulation(.x, 0, 20, 0, 0.16) |> mutate(n = .x)
+)
+
+# Plot Monte Carlo simulation
+ggplot(mc_data, aes(x = x, y = y, color = under_curve)) +
+  geom_point(alpha = 0.5) +
+  stat_function(fun = dchisq, args = list(df = 5)) +
+  facet_wrap(~ n) +
+  theme_minimal()
+```
