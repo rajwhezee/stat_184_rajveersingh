@@ -16,7 +16,9 @@ This section examines six major airports and compares their passenger traffic fr
 ## Table of Busiest Airports
 
 ```{r}
+#| label: airport-table
 #| echo: false
+#| tbl-cap: "Annual Passenger Totals for Six Major Airports, 2020-2024"
 library(tidyverse)
 library(gt)
 library(grid)
@@ -50,11 +52,13 @@ airport_data |>
   )
 ```
 
-
-## Main Plot
+## Passenger Traffic Over Time
 
 ```{r}
+#| label: airport-plot
 #| echo: false
+#| fig-cap: "Annual passenger traffic trends across six major airports from 2020 to 2024"
+#| fig-alt: "Line graph showing total passengers in millions from 2020 to 2024 for ATL, DXB, LHR, PKX, FRA, and LAX. ATL is consistently the busiest airport."
 psuPalette <- c("#1E407C", "#BC204B", "#3EA39E", "#E98300",
                 "#999999", "#AC8DCE")
 
@@ -82,14 +86,22 @@ airport_data |>
     legend.key.width = unit(1.5, "cm")
   )
 ```
+
 ## Analysis
+
 The table and line graph show how passenger traffic changed across six major airports from 2020 to 2024. Atlanta remained the busiest airport throughout the period and showed strong growth after 2020. Dubai and London Heathrow also experienced major increases over time, reflecting recovery in air travel. Beijing Daxing shows more fluctuation, while Frankfurt and Los Angeles display steadier trends.
-## Monte Carlo Simulation
+
+# Monte Carlo Simulation
+
 Monte Carlo integration is a numerical method used to estimate the value of an integral using random sampling. Instead of calculating the exact area under a curve directly, the method generates random points and estimates the proportion that fall under the function.
 
-## Visualization
+## Monte Carlo Visualization
+
 ```{r}
+#| label: monte-carlo-plot
 #| echo: false
+#| fig-cap: "Monte Carlo integration results across sample sizes of 100, 500, and 1000"
+#| fig-alt: "Faceted scatter plot showing Monte Carlo simulation results for sample sizes 100, 500, and 1000. Points colored by whether they fall under the chi-squared curve."
 library(tidyverse)
 library(ggplot2)
 
@@ -127,12 +139,12 @@ ggplot(mc_data, aes(x = x, y = y, color = under_curve)) +
     color = "Under Curve"
   ) +
   theme_minimal()
-
 ```
 
 ## Interpretation
 
 The visualization shows that as the number of sampled points increases, the Monte Carlo estimate becomes more stable and accurate. With fewer points, the estimate is less reliable and more variable. As the number of samples increases, the points better approximate the area under the curve, demonstrating how larger sample sizes improve accuracy.
+
 # Planning and Prompting GenAI Tools
 
 ## My Plan
@@ -140,30 +152,16 @@ The visualization shows that as the number of sampled points increases, the Mont
 For this task, I planned to analyze the busiest airports dataset and the Monte Carlo simulation from earlier assignments. For the airports dataset, I aimed to ensure the data was in a tidy format with variables such as airport, year, and passenger counts. I also planned to create a clear visualization, such as a line graph, to show how passenger traffic changed over time.
 
 For the Monte Carlo section, I planned to simulate random points and visualize how the estimate of the integral improves with larger sample sizes using a small multiple plot. My goal was to clearly demonstrate how increasing the number of samples affects the accuracy of the approximation.
+
 # Reflection
 
-This semester, I learnt that data wrangling is rarely straightforward and requires 
-careful thought about how data is structured before any analysis can begin. Working 
-with the tidyverse family of packages, particularly dplyr and tidyr, helped me 
-understand how to reshape and clean data efficiently using verbs like filter, select, 
-mutate, and pivot_wider.
+This semester, I learnt that data wrangling is rarely straightforward and requires careful thought about how data is structured before any analysis can begin. Working with the tidyverse family of packages, particularly dplyr and tidyr, helped me understand how to reshape and clean data efficiently using verbs like filter, select, mutate, and pivot_wider.
 
-I also learnt that visualization is not just about making plots, but about choosing 
-the right type of plot to communicate a finding clearly. The busiest airports analysis 
-showed me how a line graph can reveal trends over time in a way that a table alone 
-cannot. Similarly, the Monte Carlo simulation taught me that increasing sample size 
-improves the accuracy of numerical estimates, which I could see visually through the 
-faceted plot.
+I also learnt that visualization is not just about making plots, but about choosing the right type of plot to communicate a finding clearly. The busiest airports analysis showed me how a line graph can reveal trends over time in a way that a table alone cannot. Similarly, the Monte Carlo simulation taught me that increasing sample size improves the accuracy of numerical estimates, which I could see visually through the faceted plot.
 
-Working with Quarto this semester was a new experience that changed how I think about 
-reproducibility. I learnt that a good reproducible document should allow anyone to 
-re-run the analysis and get the same results, which requires being deliberate about 
-how code, narrative, and output are organized together. This connects directly to the 
-principles of Open Science, where transparency and reproducibility are essential.
+Working with Quarto this semester was a new experience that changed how I think about reproducibility. I learnt that a good reproducible document should allow anyone to re-run the analysis and get the same results, which requires being deliberate about how code, narrative, and output are organized together. This connects directly to the principles of Open Science, where transparency and reproducibility are essential.
 
-Finally, working with GenAI tools taught me that the quality of the output depends 
-heavily on the quality of the prompt. A detailed, context-rich prompt produces far 
-more useful and specific guidance than a generic one.
+Finally, working with GenAI tools taught me that the quality of the output depends heavily on the quality of the prompt. A detailed, context-rich prompt produces far more useful and specific guidance than a generic one.
 
 # Appendix A: GenAI Usage
 
@@ -199,6 +197,7 @@ In contrast, the generic output was vague and did not provide any specific guida
 # Appendix B: Code Appendix
 
 ```{r}
+#| label: code-appendix
 #| echo: true
 
 # =========================
