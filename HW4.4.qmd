@@ -140,7 +140,30 @@ The visualization shows that as the number of sampled points increases, the Mont
 For this task, I planned to analyze the busiest airports dataset and the Monte Carlo simulation from earlier assignments. For the airports dataset, I aimed to ensure the data was in a tidy format with variables such as airport, year, and passenger counts. I also planned to create a clear visualization, such as a line graph, to show how passenger traffic changed over time.
 
 For the Monte Carlo section, I planned to simulate random points and visualize how the estimate of the integral improves with larger sample sizes using a small multiple plot. My goal was to clearly demonstrate how increasing the number of samples affects the accuracy of the approximation.
+# Reflection
 
+This semester, I learnt that data wrangling is rarely straightforward and requires 
+careful thought about how data is structured before any analysis can begin. Working 
+with the tidyverse family of packages, particularly dplyr and tidyr, helped me 
+understand how to reshape and clean data efficiently using verbs like filter, select, 
+mutate, and pivot_wider.
+
+I also learnt that visualization is not just about making plots, but about choosing 
+the right type of plot to communicate a finding clearly. The busiest airports analysis 
+showed me how a line graph can reveal trends over time in a way that a table alone 
+cannot. Similarly, the Monte Carlo simulation taught me that increasing sample size 
+improves the accuracy of numerical estimates, which I could see visually through the 
+faceted plot.
+
+Working with Quarto this semester was a new experience that changed how I think about 
+reproducibility. I learnt that a good reproducible document should allow anyone to 
+re-run the analysis and get the same results, which requires being deliberate about 
+how code, narrative, and output are organized together. This connects directly to the 
+principles of Open Science, where transparency and reproducibility are essential.
+
+Finally, working with GenAI tools taught me that the quality of the output depends 
+heavily on the quality of the prompt. A detailed, context-rich prompt produces far 
+more useful and specific guidance than a generic one.
 
 # Appendix A: GenAI Usage
 
